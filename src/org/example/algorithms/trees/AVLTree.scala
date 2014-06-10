@@ -19,6 +19,9 @@ object AVLTree {
 
     def _elem = asInstanceOf[NonEmptyTree[T]].elem
 
+    def -[U >: T <% Ordered[U] ](e: U) = remove(this, e)
+
+    def +[U >: T <% Ordered[U] ](e: U) = insert(this, e)
   }
 
   case object Empty extends Tree[Nothing] {
@@ -48,11 +51,11 @@ object AVLTree {
 
   private def balance[T](t: Tree[T]) = t.getOr(0, (t: NonEmptyTree[T]) => depth(t left) - depth(t right))
 
-  private def depth[T](tree: Tree[T]): Int = tree.getOr(0, (t: NonEmptyTree[T]) => t.depthValue)
+  def depth[T](tree: Tree[T]): Int = tree.getOr(0, (t: NonEmptyTree[T]) => t.depthValue)
 
   def Root[T <% Ordered[T]](element: T) = NonEmptyTree(element, Empty, Empty)
 
-  def insert[T <% Ordered[T]](tree: Tree[T], elem: T): NonEmptyTree[T] =
+  private def insert[T <% Ordered[T]](tree: Tree[T], elem: T): NonEmptyTree[T] =
     tree match {
       case Empty => Root(elem)
       case tree: NonEmptyTree[T] => rebalance(
@@ -93,7 +96,7 @@ object AVLTree {
     }
   }
 
-  def remove[T <% Ordered[T]](tree: Tree[T], element: T): Tree[T] = removeElem(tree, element) match {
+  private def remove[T <% Ordered[T]](tree: Tree[T], element: T): Tree[T] = removeElem(tree, element) match {
     case Empty => Empty
     case ne: NonEmptyTree[T] => rebalance(ne)
   }
@@ -152,7 +155,7 @@ object AVLTree {
   def apply[T <% Ordered[T]](x: T, elems: T*): NonEmptyTree[T] = {
     var t = Root(x)
     for (elem <- elems)
-      t = insert(t, elem)
+      t += elem
     t
   }
 }
