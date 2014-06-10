@@ -3,6 +3,22 @@ package org.example.algorithms.trees
 import java.util.NoSuchElementException
 import scala.annotation.tailrec
 
+/** Prove: n keys -> height = O(log n)
+  * Lemma: minimum   F(H+2) + 1  vertices //F(n) denotes Fibonacci numbers
+  * Proof.
+  * Let m(h) - minimal amount of vertices for a given h
+  * Obviously: m(h+2) = m(h+1) + m(h) + 1
+  * induction.
+  * Base: m1 = F(3) - 1  correct
+  * Transition: obv.
+  *
+  *
+  * Proof.
+  * F(h) = Omega( phi ^h ), where phi = ( sqrt(5) + 1) / 2
+  * Then, n >= phi^h , take log and you re done
+  * */
+
+
 object AVLTree {
 
   class AlreadyExistsException extends Exception
@@ -19,9 +35,9 @@ object AVLTree {
 
     def _elem = asInstanceOf[NonEmptyTree[T]].elem
 
-    def -[U >: T <% Ordered[U] ](e: U) = remove(this, e)
+    def -[U >: T <% Ordered[U]](e: U) = remove(this, e)
 
-    def +[U >: T <% Ordered[U] ](e: U) = insert(this, e)
+    def +[U >: T <% Ordered[U]](e: U) = insert(this, e)
   }
 
   case object Empty extends Tree[Nothing] {
